@@ -1,5 +1,7 @@
 package Last_Project.membership.config;
 
+import Last_Project.membership.config.auth.FailHandler;
+import Last_Project.membership.config.auth.SuccessHandler;
 import Last_Project.membership.config.oauth.PrincipalOauth2UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -41,19 +43,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin()
                 .loginPage("/loginForm")
                 .loginProcessingUrl("/login") // /login 주소가 호출되면 시큐리티가 낚아채서 대신 로그인 진행
-                .defaultSuccessUrl("/")
+                .successHandler(new SuccessHandler())
+                .failureHandler(new FailHandler())
                 .and()
                 .oauth2Login()
                 .loginPage("/loginForm")
                 .userInfoEndpoint()
                 .userService(principalOauth2UserService);
-                //구글 로그인이 완료된 뒤 후처리 필요. Tip 코드X (액세스토큰 + 사용자 프로필정보 O)
-             http.logout()
+        //구글 로그인이 완료된 뒤 후처리 필요. Tip 코드X (액세스토큰 + 사용자 프로필정보 O)
+        http.logout()
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/logoutForm");
 
-        }
-
-
     }
+
+
+}
 
